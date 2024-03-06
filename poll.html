@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Management App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        #container {
+            width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="datetime-local"],
+        button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .timer {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Time Management App</h2>
+        <input type="text" id="taskName" placeholder="Task Name">
+        <input type="datetime-local" id="deadline" placeholder="Deadline">
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        function addTask() {
+            var taskName = document.getElementById("taskName").value;
+            var deadline = document.getElementById("deadline").value;
+
+            if (taskName === "" || deadline === "") {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            var taskList = document.getElementById("taskList");
+            var li = document.createElement("li");
+            li.textContent = taskName + " - " + deadline;
+            taskList.appendChild(li);
+
+            document.getElementById("taskName").value = "";
+            document.getElementById("deadline").value = "";
+
+            // Start countdown timer
+            startTimer(deadline, li);
+        }
+
+        function startTimer(deadline, element) {
+            var countDownDate = new Date(deadline).getTime();
+
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+               var timerString = "";
+                if (days > 0) timerString += days + "d ";
+                if (hours > 0) timerString += hours + "h ";
+                if (minutes > 0) timerString += minutes + "m ";
+                timerString += seconds + "s";
+
+                element.innerHTML += '<span class="timer">' + timerString + '</span>';
+
+                if (distance < 0) {
+                    clearInterval(x);
+                    element.innerHTML += '<span class="timer" style="color: red;"> Deadline passed</span>';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
